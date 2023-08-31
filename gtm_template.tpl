@@ -46,6 +46,22 @@ ___TEMPLATE_PARAMETERS___
     "defaultValue": "latest"
   },
   {
+    "type": "TEXT",
+    "name": "cc_script_url",
+    "displayName": "Cookie Consent Script url",
+    "simpleValueType": true,
+    "valueValidators": [
+      {
+        "type": "REGEX",
+        "args": [
+          "^https?:\/\/(.*)$"
+        ]
+      }
+    ],
+    "help": "The full url to the cookie consent script if you want to use your own cookie consent script",
+    "defaultValue": ""
+  },
+  {
     "type": "CHECKBOX",
     "name": "force_consent",
     "checkboxText": "Make consent required",
@@ -1997,7 +2013,8 @@ setInWindow('cc_wrapper_config', {
 
 // inject cookie consent wrapper
 const packageVersion = 'latest' === data.package_version ? '' : '@' + data.package_version;
-const cookieConsentWrapperScript = 'https://unpkg.com/68publishers-cookie-consent' + packageVersion + '/dist/cookie-consent.min.js';
+const cookieConsentWrapperScript = data.cc_script_url ? data.cc_script_url : 'https://unpkg.com/68publishers-cookie-consent' + packageVersion + '/dist/cookie-consent.min.js';
+
 
 if (queryPermission('inject_script', cookieConsentWrapperScript)) {
     injectScript(cookieConsentWrapperScript, function () {      
@@ -2527,5 +2544,3 @@ setup: ''
 ___NOTES___
 
 Created on 17. 12. 2021 0:22:20
-
-
