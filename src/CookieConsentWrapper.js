@@ -2,7 +2,7 @@
 
 require('vanilla-cookieconsent');
 
-const version = require('./version.json').version;
+const version = require('../package.json').version;
 const Config = require('./Config/Config');
 const Storage = require('./Storage/Storage');
 const StoragePool = require('./Storage/StoragePool');
@@ -67,6 +67,28 @@ class CookieConsentWrapper {
 
     get cookieTables() {
         return this._cookieTables;
+    }
+
+    get consentCookieData() {
+        const cookieName = this._config.pluginOptions.cookie_name;
+        let cookieValue = document.cookie.match("(^|;)\\s*" + cookieName + "\\s*=\\s*([^;]+)");
+        cookieValue = cookieValue ? cookieValue.pop() : null;
+
+        if (null === cookieValue) {
+            return null;
+        }
+
+        try{
+            cookieValue = JSON.parse(cookieValue)
+        } catch (e) {
+            try {
+                cookieValue = JSON.parse(decodeURIComponent(cookieValue))
+            } catch (e) {
+                cookieValue = null;
+            }
+        }
+
+        return cookieValue;
     }
 
     setStaticUserIdentity(id) {

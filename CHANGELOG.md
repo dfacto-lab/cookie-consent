@@ -7,9 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2024-02-28
+
+### Added
+
+- Added default translations for `Croatian` (`hr`).
+- Added default translations for `Italian` (`it`).
+- Added default translations for `Norwegian` (`no`).
+- Added default translations for `Swedish` (`sv`).
+- Added default translations for `Ukrainian` (`uk`).
+
+### Changed
+
+- Updated translations for `Bulgarian` (`bg`).
+
+## [0.5.0] - 2024-02-27
+
+### Added
+
+- Added new storages `ad_user_data` and `ad_personalization` in the GTM template (Google Consent Mode v2 integration).
+- Added new translation keys `ad_user_data_title`, `ad_user_data_description`, `ad_personalization_title` and `ad_personalization_description`.
+- Added the [Migration from v0.4 to v0.5](docs/migration-from-0.4-to-0.5.md) guide.
+
+### Changed
+
+- Changed the way to configure storages (more information in the [Migration from v0.4 to v0.5](docs/migration-from-0.4-to-0.5.md) guide).
+- Updated README.
+
+## [0.4.8] - 2024-02-15
+
+### Added
+
+- Added fields `Integration > CMP API > Default environment` and `Integration > CMP API > Environment code` in the GTM template.
+- Added option `evironment` in the `CmpApiOptions`. The environment is taken into account in the integration with CMP.
+- Added getter `CookieConsentWrapper.consentCookieData` that returns data from the consent cookie (`cc-settings` by default) as an object or null if the consent doesn't exists.
+
+### Changed
+
+- Credentials are now omitted in CPM integration requests.
+
+## [0.4.7] - 2023-10-04
+
+### Added
+
+- Added default translations for `Dutch` (`nl`) language.
+
+### Changed
+
+- Updated all dependencies including the original plugin (`vanilla-cookieconsent@^2.9.2`).
+- The wrapper now includes CSS styles of the original plugin corresponding to its version.
+
+### Fixed
+
+- Fixed npm audit vulnerability.
+
+## [0.4.6] - 2023-09-01
+
 ### Added
 
 - Added missing translation keys in the GTM template.
+- Added default translations for `Finnish` (`fi`) language.
 
 ## [0.4.5] - 2023-04-26
 
@@ -270,7 +327,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The first version of the package has been released.
 
-[unreleased]: https://github.com/68publishers/cookie-consent/compare/v0.4.5...main
+[unreleased]: https://github.com/68publishers/cookie-consent/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/68publishers/cookie-consent/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/68publishers/cookie-consent/compare/v0.4.8...v0.5.0
+[0.4.8]: https://github.com/68publishers/cookie-consent/compare/v0.4.7...v0.4.8
+[0.4.7]: https://github.com/68publishers/cookie-consent/compare/v0.4.6...v0.4.7
+[0.4.6]: https://github.com/68publishers/cookie-consent/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/68publishers/cookie-consent/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/68publishers/cookie-consent/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/68publishers/cookie-consent/compare/v0.4.2...v0.4.3

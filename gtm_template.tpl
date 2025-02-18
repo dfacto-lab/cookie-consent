@@ -485,32 +485,35 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "CHECKBOX",
-        "name": "functionality_storage_enabled_by_default",
-        "checkboxText": "Enabled by default",
-        "simpleValueType": true,
-        "defaultValue": true
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "functionality_storage_display_in_widget",
-        "checkboxText": "Display in the widget",
-        "simpleValueType": true,
-        "subParams": [
+        "type": "SELECT",
+        "name": "functionality_storage_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "type": "CHECKBOX",
-            "name": "functionality_storage_readonly",
-            "checkboxText": "Readonly",
-            "simpleValueType": true,
-            "defaultValue": true,
-            "enablingConditions": [
-              {
-                "paramName": "functionality_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ]
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
           },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_readonly_enabled",
+        "subParams": [
           {
             "type": "SELECT",
             "name": "functionality_storage_sync_consent_with",
@@ -518,16 +521,24 @@ ___TEMPLATE_PARAMETERS___
             "macrosInSelect": false,
             "selectItems": [
               {
-                "value": "personalization_storage",
-                "displayValue": "Personalization storage"
-              },
-              {
                 "value": "security_storage",
                 "displayValue": "Security storage"
               },
               {
+                "value": "personalization_storage",
+                "displayValue": "Personalization storage"
+              },
+              {
                 "value": "ad_storage",
                 "displayValue": "Ad storage"
+              },
+              {
+                "value": "ad_user_data",
+                "displayValue": "Ad user data"
+              },
+              {
+                "value": "ad_personalization",
+                "displayValue": "Ad personalization"
               },
               {
                 "value": "analytics_storage",
@@ -537,52 +548,45 @@ ___TEMPLATE_PARAMETERS___
             "simpleValueType": true,
             "enablingConditions": [
               {
-                "paramName": "functionality_storage_display_in_widget",
-                "paramValue": false,
+                "paramName": "functionality_storage_visibility",
+                "paramValue": "hidden_synchronized",
                 "type": "EQUALS"
               }
             ],
-            "notSetText": "None"
-          },
-          {
-            "type": "CHECKBOX",
-            "name": "functionality_storage_show_again",
-            "checkboxText": "Show the modal again if storage is denied",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
+            "notSetText": "None",
+            "valueValidators": [
               {
-                "paramName": "functionality_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "help": "The settings modal will be opened again if the storage is denied.",
-            "subParams": [
-              {
-                "type": "TEXT",
-                "name": "functionality_storage_show_again_expiration",
-                "displayName": "After",
-                "simpleValueType": true,
-                "defaultValue": 7,
-                "enablingConditions": [
-                  {
-                    "paramName": "functionality_storage_show_again",
-                    "paramValue": true,
-                    "type": "EQUALS"
-                  }
-                ],
-                "valueUnit": "days",
-                "valueValidators": [
-                  {
-                    "type": "POSITIVE_NUMBER"
-                  }
-                ]
+                "type": "NON_EMPTY"
               }
             ]
+          },
+          {
+            "type": "TEXT",
+            "name": "functionality_storage_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "functionality_storage_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "functionality_storage_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
           }
-        ],
-        "defaultValue": true
+        ]
       },
       {
         "type": "TEXT",
@@ -601,38 +605,45 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "CHECKBOX",
-        "name": "security_storage_enabled_by_default",
-        "checkboxText": "Enabled by default",
-        "simpleValueType": true,
-        "defaultValue": false
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "security_storage_display_in_widget",
-        "checkboxText": "Display in the widget",
-        "simpleValueType": true,
-        "subParams": [
+        "type": "SELECT",
+        "name": "security_storage_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "type": "CHECKBOX",
-            "name": "security_storage_readonly",
-            "checkboxText": "Readonly",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
-              {
-                "paramName": "security_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ]
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
           },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_disabled",
+        "subParams": [
           {
             "type": "SELECT",
             "name": "security_storage_sync_consent_with",
             "displayName": "Synchronize consent with",
             "macrosInSelect": false,
             "selectItems": [
+              {
+                "value": "functionality_storage",
+                "displayValue": "Functionality storage"
+              },
               {
                 "value": "personalization_storage",
                 "displayValue": "Personalization storage"
@@ -642,63 +653,60 @@ ___TEMPLATE_PARAMETERS___
                 "displayValue": "Ad storage"
               },
               {
-                "value": "analytics_storage",
-                "displayValue": "Analytics storage"
+                "value": "ad_user_data",
+                "displayValue": "Ad user data"
               },
               {
-                "value": "functionality_storage",
-                "displayValue": "Functionality storage"
+                "value": "ad_personalization",
+                "displayValue": "Ad personalization"
+              },
+              {
+                "value": "analytics_storage",
+                "displayValue": "Analytics storage"
               }
             ],
             "simpleValueType": true,
             "enablingConditions": [
               {
-                "paramName": "security_storage_display_in_widget",
-                "paramValue": false,
+                "paramName": "security_storage_visibility",
+                "paramValue": "hidden_synchronized",
                 "type": "EQUALS"
               }
             ],
-            "notSetText": "None"
-          },
-          {
-            "type": "CHECKBOX",
-            "name": "security_storage_show_again",
-            "checkboxText": "Show the modal again if storage is denied",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
+            "notSetText": "None",
+            "valueValidators": [
               {
-                "paramName": "security_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "help": "The settings modal will be opened again if the storage is denied.",
-            "subParams": [
-              {
-                "type": "TEXT",
-                "name": "security_storage_show_again_expiration",
-                "displayName": "After",
-                "simpleValueType": true,
-                "defaultValue": 7,
-                "enablingConditions": [
-                  {
-                    "paramName": "security_storage_show_again",
-                    "paramValue": true,
-                    "type": "EQUALS"
-                  }
-                ],
-                "valueUnit": "days",
-                "valueValidators": [
-                  {
-                    "type": "POSITIVE_NUMBER"
-                  }
-                ]
+                "type": "NON_EMPTY"
               }
             ]
+          },
+          {
+            "type": "TEXT",
+            "name": "security_storage_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "security_storage_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "security_storage_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
           }
-        ],
-        "defaultValue": false
+        ]
       },
       {
         "type": "TEXT",
@@ -717,32 +725,35 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "CHECKBOX",
-        "name": "personalization_storage_enabled_by_default",
-        "checkboxText": "Enabled by default",
-        "simpleValueType": true,
-        "defaultValue": false
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "personalization_storage_display_in_widget",
-        "checkboxText": "Display in the widget",
-        "simpleValueType": true,
-        "subParams": [
+        "type": "SELECT",
+        "name": "personalization_storage_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "type": "CHECKBOX",
-            "name": "personalization_storage_readonly",
-            "checkboxText": "Readonly",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
-              {
-                "paramName": "personalization_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ]
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
           },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_disabled",
+        "subParams": [
           {
             "type": "SELECT",
             "name": "personalization_storage_sync_consent_with",
@@ -750,71 +761,72 @@ ___TEMPLATE_PARAMETERS___
             "macrosInSelect": false,
             "selectItems": [
               {
-                "value": "ad_storage",
-                "displayValue": "Ad storage"
-              },
-              {
-                "value": "analytics_storage",
-                "displayValue": "Analytics storage"
-              },
-              {
                 "value": "functionality_storage",
                 "displayValue": "Functionality storage"
               },
               {
                 "value": "security_storage",
                 "displayValue": "Security storage"
+              },
+              {
+                "value": "ad_storage",
+                "displayValue": "Ad storage"
+              },
+              {
+                "value": "ad_user_data",
+                "displayValue": "Ad user data"
+              },
+              {
+                "value": "ad_personalization",
+                "displayValue": "Ad personalization"
+              },
+              {
+                "value": "analytics_storage",
+                "displayValue": "Analytics storage"
               }
             ],
             "simpleValueType": true,
             "enablingConditions": [
               {
-                "paramName": "personalization_storage_display_in_widget",
-                "paramValue": false,
+                "paramName": "personalization_storage_visibility",
+                "paramValue": "hidden_synchronized",
                 "type": "EQUALS"
               }
             ],
-            "notSetText": "None"
-          },
-          {
-            "type": "CHECKBOX",
-            "name": "personalization_storage_show_again",
-            "checkboxText": "Show the modal again if storage is denied",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
+            "notSetText": "None",
+            "valueValidators": [
               {
-                "paramName": "personalization_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "help": "The settings modal will be opened again if the storage is denied.",
-            "subParams": [
-              {
-                "type": "TEXT",
-                "name": "personalization_storage_show_again_expiration",
-                "displayName": "After",
-                "simpleValueType": true,
-                "defaultValue": 7,
-                "enablingConditions": [
-                  {
-                    "paramName": "personalization_storage_show_again",
-                    "paramValue": true,
-                    "type": "EQUALS"
-                  }
-                ],
-                "valueUnit": "days",
-                "valueValidators": [
-                  {
-                    "type": "POSITIVE_NUMBER"
-                  }
-                ]
+                "type": "NON_EMPTY"
               }
             ]
+          },
+          {
+            "type": "TEXT",
+            "name": "personalization_storage_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "personalization_storage_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "personalization_storage_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
           }
-        ],
-        "defaultValue": false
+        ]
       },
       {
         "type": "TEXT",
@@ -833,42 +845,41 @@ ___TEMPLATE_PARAMETERS___
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "CHECKBOX",
-        "name": "ad_storage_enabled_by_default",
-        "checkboxText": "Enabled by default",
-        "simpleValueType": true,
-        "defaultValue": false
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "ad_storage_display_in_widget",
-        "checkboxText": "Display in the widget",
-        "simpleValueType": true,
-        "subParams": [
+        "type": "SELECT",
+        "name": "ad_storage_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "type": "CHECKBOX",
-            "name": "ad_storage_readonly",
-            "checkboxText": "Readonly",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
-              {
-                "paramName": "ad_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ]
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
           },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_disabled",
+        "subParams": [
           {
             "type": "SELECT",
             "name": "ad_storage_sync_consent_with",
             "displayName": "Synchronize consent with",
             "macrosInSelect": false,
             "selectItems": [
-              {
-                "value": "analytics_storage",
-                "displayValue": "Analytics storage"
-              },
               {
                 "value": "functionality_storage",
                 "displayValue": "Functionality storage"
@@ -880,57 +891,62 @@ ___TEMPLATE_PARAMETERS___
               {
                 "value": "personalization_storage",
                 "displayValue": "Personalization storage"
+              },
+              {
+                "value": "ad_user_data",
+                "displayValue": "Ad user data"
+              },
+              {
+                "value": "ad_personalization",
+                "displayValue": "Ad personalization"
+              },
+              {
+                "value": "analytics_storage",
+                "displayValue": "Analytics storage"
               }
             ],
             "simpleValueType": true,
             "enablingConditions": [
               {
-                "paramName": "ad_storage_display_in_widget",
-                "paramValue": false,
+                "paramName": "ad_storage_visibility",
+                "paramValue": "hidden_synchronized",
                 "type": "EQUALS"
               }
             ],
-            "notSetText": "None"
-          },
-          {
-            "type": "CHECKBOX",
-            "name": "ad_storage_show_again",
-            "checkboxText": "Show the modal again if storage is denied",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
+            "notSetText": "None",
+            "valueValidators": [
               {
-                "paramName": "ad_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "help": "The settings modal will be opened again if the storage is denied.",
-            "subParams": [
-              {
-                "type": "TEXT",
-                "name": "ad_storage_show_again_expiration",
-                "displayName": "After",
-                "simpleValueType": true,
-                "defaultValue": 7,
-                "enablingConditions": [
-                  {
-                    "paramName": "ad_storage_show_again",
-                    "paramValue": true,
-                    "type": "EQUALS"
-                  }
-                ],
-                "valueUnit": "days",
-                "valueValidators": [
-                  {
-                    "type": "POSITIVE_NUMBER"
-                  }
-                ]
+                "type": "NON_EMPTY"
               }
             ]
+          },
+          {
+            "type": "TEXT",
+            "name": "ad_storage_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "ad_storage_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "ad_storage_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
           }
-        ],
-        "defaultValue": false
+        ]
       },
       {
         "type": "TEXT",
@@ -944,37 +960,280 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "GROUP",
+    "name": "ad_user_data",
+    "displayName": "Ad user data",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "ad_user_data_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
+          },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_disabled",
+        "subParams": [
+          {
+            "type": "SELECT",
+            "name": "ad_user_data_sync_consent_with",
+            "displayName": "Synchronize consent with",
+            "macrosInSelect": false,
+            "selectItems": [
+              {
+                "value": "functionality_storage",
+                "displayValue": "Functionality storage"
+              },
+              {
+                "value": "security_storage",
+                "displayValue": "Security storage"
+              },
+              {
+                "value": "personalization_storage",
+                "displayValue": "Personalization storage"
+              },
+              {
+                "value": "ad_storage",
+                "displayValue": "Ad storage"
+              },
+              {
+                "value": "ad_personalization",
+                "displayValue": "Ad personalization"
+              },
+              {
+                "value": "analytics_storage",
+                "displayValue": "Analytics storage"
+              }
+            ],
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "ad_user_data_visibility",
+                "paramValue": "hidden_synchronized",
+                "type": "EQUALS"
+              }
+            ],
+            "notSetText": "None",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "name": "ad_user_data_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "ad_user_data_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "ad_user_data_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "ad_user_data_event_trigger",
+        "displayName": "Event trigger name",
+        "simpleValueType": true,
+        "defaultValue": "68publishers_ad_user_data",
+        "help": "The name of a trigger that will be invoked on after a consent."
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "ad_personalization",
+    "displayName": "Ad personalization",
+    "groupStyle": "ZIPPY_OPEN",
+    "subParams": [
+      {
+        "type": "SELECT",
+        "name": "ad_personalization_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
+          {
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
+          },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_disabled",
+        "subParams": [
+          {
+            "type": "SELECT",
+            "name": "ad_personalization_sync_consent_with",
+            "displayName": "Synchronize consent with",
+            "macrosInSelect": false,
+            "selectItems": [
+              {
+                "value": "functionality_storage",
+                "displayValue": "Functionality storage"
+              },
+              {
+                "value": "security_storage",
+                "displayValue": "Security storage"
+              },
+              {
+                "value": "personalization_storage",
+                "displayValue": "Personalization storage"
+              },
+              {
+                "value": "ad_storage",
+                "displayValue": "Ad storage"
+              },
+              {
+                "value": "ad_user_data",
+                "displayValue": "Ad user data"
+              },
+              {
+                "value": "analytics_storage",
+                "displayValue": "Analytics storage"
+              }
+            ],
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "ad_personalization_visibility",
+                "paramValue": "hidden_synchronized",
+                "type": "EQUALS"
+              }
+            ],
+            "notSetText": "None",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "name": "ad_personalization_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "ad_personalization_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "ad_personalization_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
+          }
+        ]
+      },
+      {
+        "type": "TEXT",
+        "name": "ad_personalization_event_trigger",
+        "displayName": "Event trigger name",
+        "simpleValueType": true,
+        "defaultValue": "68publishers_ad_personalization",
+        "help": "The name of a trigger that will be invoked on after a consent."
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
     "name": "analytics_storage",
     "displayName": "Analytics storage",
     "groupStyle": "ZIPPY_OPEN",
     "subParams": [
       {
-        "type": "CHECKBOX",
-        "name": "analytics_storage_enabled_by_default",
-        "checkboxText": "Enabled by default",
-        "simpleValueType": true,
-        "defaultValue": false
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "analytics_storage_display_in_widget",
-        "checkboxText": "Display in the widget",
-        "simpleValueType": true,
-        "subParams": [
+        "type": "SELECT",
+        "name": "analytics_storage_visibility",
+        "displayName": "Visibility and default state",
+        "macrosInSelect": false,
+        "selectItems": [
           {
-            "type": "CHECKBOX",
-            "name": "analytics_storage_readonly",
-            "checkboxText": "Readonly",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
-              {
-                "paramName": "analytics_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ]
+            "value": "visible_enabled",
+            "displayValue": "Visible, Enabled by default"
           },
+          {
+            "value": "visible_readonly_enabled",
+            "displayValue": "Visible \u0026 Readonly, Enabled by default"
+          },
+          {
+            "value": "visible_disabled",
+            "displayValue": "Visible, Disabled by default"
+          },
+          {
+            "value": "hidden_synchronized",
+            "displayValue": "Hidden, Synchronized"
+          },
+          {
+            "value": "hidden_disabled",
+            "displayValue": "Hidden, Disabled always"
+          }
+        ],
+        "simpleValueType": true,
+        "defaultValue": "visible_disabled",
+        "subParams": [
           {
             "type": "SELECT",
             "name": "analytics_storage_sync_consent_with",
@@ -996,57 +1255,58 @@ ___TEMPLATE_PARAMETERS___
               {
                 "value": "ad_storage",
                 "displayValue": "Ad storage"
+              },
+              {
+                "value": "ad_user_data",
+                "displayValue": "Ad user data"
+              },
+              {
+                "value": "ad_personalization",
+                "displayValue": "Ad personalization"
               }
             ],
             "simpleValueType": true,
             "enablingConditions": [
               {
-                "paramName": "analytics_storage_display_in_widget",
-                "paramValue": false,
+                "paramName": "analytics_storage_visibility",
+                "paramValue": "hidden_synchronized",
                 "type": "EQUALS"
               }
             ],
-            "notSetText": "None"
-          },
-          {
-            "type": "CHECKBOX",
-            "name": "analytics_storage_show_again",
-            "checkboxText": "Show the modal again if storage is denied",
-            "simpleValueType": true,
-            "defaultValue": false,
-            "enablingConditions": [
+            "notSetText": "None",
+            "valueValidators": [
               {
-                "paramName": "analytics_storage_display_in_widget",
-                "paramValue": true,
-                "type": "EQUALS"
-              }
-            ],
-            "help": "The settings modal will be opened again if the storage is denied.",
-            "subParams": [
-              {
-                "type": "TEXT",
-                "name": "analytics_storage_show_again_expiration",
-                "displayName": "After",
-                "simpleValueType": true,
-                "defaultValue": 7,
-                "enablingConditions": [
-                  {
-                    "paramName": "analytics_storage_show_again",
-                    "paramValue": true,
-                    "type": "EQUALS"
-                  }
-                ],
-                "valueUnit": "days",
-                "valueValidators": [
-                  {
-                    "type": "POSITIVE_NUMBER"
-                  }
-                ]
+                "type": "NON_EMPTY"
               }
             ]
+          },
+          {
+            "type": "TEXT",
+            "name": "analytics_storage_show_again_expiration",
+            "displayName": "If the storage is denied show the modal again after",
+            "simpleValueType": true,
+            "defaultValue": 0,
+            "enablingConditions": [
+              {
+                "paramName": "analytics_storage_visibility",
+                "paramValue": "visible_enabled",
+                "type": "EQUALS"
+              },
+              {
+                "paramName": "analytics_storage_visibility",
+                "paramValue": "visible_disabled",
+                "type": "EQUALS"
+              }
+            ],
+            "valueUnit": "days",
+            "valueValidators": [
+              {
+                "type": "NON_NEGATIVE_NUMBER"
+              }
+            ],
+            "help": "Set the value to 0 if you want to disable the feature."
           }
-        ],
-        "defaultValue": false
+        ]
       },
       {
         "type": "TEXT",
@@ -1115,6 +1375,24 @@ ___TEMPLATE_PARAMETERS___
               "type": "CHECKBOX",
               "name": "ad_storage",
               "checkboxText": "Ad storage",
+              "simpleValueType": true
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "CHECKBOX",
+              "name": "ad_user_data",
+              "checkboxText": "Ad user data",
+              "simpleValueType": true
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "CHECKBOX",
+              "name": "ad_personalization",
+              "checkboxText": "Ad personalization",
               "simpleValueType": true
             },
             "isUnique": false
@@ -1381,6 +1659,22 @@ ___TEMPLATE_PARAMETERS___
                 {
                   "value": "find_out_more",
                   "displayValue": "find_out_more"
+                },
+                {
+                  "value": "ad_user_data_title",
+                  "displayValue": "ad_user_data_title"
+                },
+                {
+                  "value": "ad_user_data_description",
+                  "displayValue": "ad_user_data_description"
+                },
+                {
+                  "value": "ad_personalization_title",
+                  "displayValue": "ad_personalization_title"
+                },
+                {
+                  "value": "ad_personalization_description",
+                  "displayValue": "ad_personalization_description"
                 }
               ],
               "simpleValueType": true
@@ -1607,6 +1901,46 @@ ___TEMPLATE_PARAMETERS___
           },
           {
             "type": "CHECKBOX",
+            "name": "cmp_api_default_environment",
+            "checkboxText": "Default environment",
+            "simpleValueType": true,
+            "defaultValue": true,
+            "enablingConditions": [
+              {
+                "paramName": "cmp_api_enabled",
+                "paramValue": true,
+                "type": "EQUALS"
+              }
+            ]
+          },
+          {
+            "type": "TEXT",
+            "name": "cmp_api_environment_code",
+            "displayName": "Environment code",
+            "simpleValueType": true,
+            "enablingConditions": [
+              {
+                "paramName": "cmp_api_default_environment",
+                "paramValue": false,
+                "type": "EQUALS"
+              }
+            ],
+            "help": "Environment code from the CMP. A GTM variable that returns string or null (default environment) can be used.",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY",
+                "enablingConditions": [
+                  {
+                    "paramName": "cmp_api_default_environment",
+                    "paramValue": false,
+                    "type": "EQUALS"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "CHECKBOX",
             "name": "cmp_api_consent_api_enabled",
             "checkboxText": "Consent API enabled",
             "simpleValueType": true,
@@ -1729,14 +2063,15 @@ log('data =', data);
 const gtag = createArgumentsQueue('gtag', 'dataLayer');
 
 // create temporary wrapper in the window
-const temporaryWrapper = (function() {
+const temporaryWrapper = (function () {
   const events = [];
-  
+
   return {
     on: function (event, callback, scope) {
       events.push([event, callback, scope || null]);
-      
-      return function () {};
+
+      return function () {
+      };
     },
     getEvents: function () {
       return events;
@@ -1750,41 +2085,68 @@ setInWindow('CookieConsentWrapper', temporaryWrapper, false);
 let consentCookie = getCookieValues(data.cookie_name)[0] || null;
 
 if (null !== consentCookie) {
-    consentCookie = JSON.parse(consentCookie);
-    consentCookie = consentCookie.hasOwnProperty('level') && consentCookie.level.length ? consentCookie.level : [];
+  consentCookie = JSON.parse(consentCookie);
+  consentCookie = consentCookie.hasOwnProperty('level') && consentCookie.level.length ? consentCookie.level : [];
 }
 
 // build storage pool & event triggers
 const storagePool = {};
 const eventTriggers = {};
-const storageNames = ['functionality_storage', 'security_storage', 'personalization_storage', 'ad_storage', 'analytics_storage'];
+const storageNames = ['functionality_storage', 'security_storage', 'personalization_storage', 'ad_storage', 'ad_user_data', 'ad_personalization', 'analytics_storage'];
+
+const VisibilityMap = {
+  visibleEnabled: 'visible_enabled',
+  visibleReadonlyEnabled: 'visible_readonly_enabled',
+  visibleDisabled: 'visible_disabled',
+  hiddenSynchronized: 'hidden_synchronized',
+  hiddenDisabled: 'hidden_disabled',
+};
+
+const VisibilityResolver = {
+  isEnabledByDefault: v => {
+    return -1 !== [VisibilityMap.visibleEnabled, VisibilityMap.visibleReadonlyEnabled].indexOf(v);
+  },
+  isDisplayInWidget: v => {
+    return -1 !== [VisibilityMap.visibleEnabled, VisibilityMap.visibleReadonlyEnabled, VisibilityMap.visibleDisabled].indexOf(v);
+  },
+  isReadonly: v => {
+    return VisibilityMap.visibleReadonlyEnabled === v;
+  },
+  canSynchronizeConsent: v => {
+    return VisibilityMap.hiddenSynchronized === v;
+  },
+  canShowModalAgain: v => {
+    return -1 !== [VisibilityMap.visibleEnabled, VisibilityMap.visibleDisabled].indexOf(v);
+  },
+};
 
 for (let key in storageNames) {
   const storageName = storageNames[key];
-  const syncConsentWith = data[storageName + '_sync_consent_with'];
-  const showModalAgain = data[storageName + '_show_again'];
-  const showModalAgainExpiration = data[storageName + '_show_again_expiration'];
+  const visibility = data[storageName + '_visibility'];
   const eventTriggerName = data[storageName + '_event_trigger'];
-  
+  const syncConsentWith = VisibilityResolver.canSynchronizeConsent(visibility) ? data[storageName + '_sync_consent_with'] : undefined;
+  const showModalAgainExpiration = VisibilityResolver.canShowModalAgain(visibility) ? data[storageName + '_show_again_expiration'] : undefined;
+
   // build storage config
   const storage = {
     name: storageName,
-    enabled_by_default: data[storageName + '_enabled_by_default'] || false,
-    display_in_widget: data[storageName + '_display_in_widget'] || false,
-    readonly: data[storageName + '_readonly'] || false,
+    enabled_by_default: VisibilityResolver.isEnabledByDefault(visibility),
+    display_in_widget: VisibilityResolver.isDisplayInWidget(visibility),
+    readonly: VisibilityResolver.isReadonly(visibility),
   };
-  
+
   if (syncConsentWith) {
     storage.sync_consent_with = syncConsentWith;
   }
-  
-  if (true === showModalAgain && showModalAgainExpiration) {
-      storage.show_modal_again_expiration = makeInteger(showModalAgainExpiration);
+
+  if (showModalAgainExpiration) {
+    storage.show_modal_again_expiration = makeInteger(showModalAgainExpiration);
   }
-  
+
   // push into the pool
   storagePool[storage.name] = storage;
-  
+
+
   // push new trigger or update existing
   if (eventTriggerName && '' !== eventTriggerName) {
     if (eventTriggers.hasOwnProperty(eventTriggerName)) {
@@ -1802,18 +2164,18 @@ for (let key in storageNames) {
 // process composite triggers
 for (let key in data.composite_consent_event_triggers || []) {
   const compositeEventTrigger = data.composite_consent_event_triggers[key];
-  
+
   // check duplicated trigger name
   if (eventTriggers.hasOwnProperty(compositeEventTrigger.name)) {
     log('Error: Composite event trigger "' + compositeEventTrigger.name + '" defined but some trigger with same name is also defined as a storage trigger.');
     data.gtmOnFailure();
-    
+
     continue;
   }
-  
+
   // get array of storage names that are needed for triggering of an event
   const compositeEventTriggerStorageNames = [];
-  
+
   for (let storageKey in storageNames) {
     const storageName = storageNames[storageKey];
 
@@ -1838,20 +2200,20 @@ const acceptedStorageNames = [];
 // setup default consent & invoke event triggers for accepted storages
 for (let key in storagePool) {
   const storage = storagePool[key];
-  
+
   let defaultStorageConsent = ((null === consentCookie && storage.enabled_by_default) || (null !== consentCookie && -1 !== consentCookie.indexOf(storage.name))) ? 'granted' : 'denied';
 
-  
+
   // if consent is denied then check "sync_consent_with" property
   if ('denied' === defaultStorageConsent && storage.hasOwnProperty('sync_consent_with') && storagePool.hasOwnProperty(storage.sync_consent_with)) {
     const delegatedStorage = storagePool[storage.sync_consent_with];
-    
+
     defaultStorageConsent = ((null === consentCookie && delegatedStorage.enabled_by_default) || (null !== consentCookie && -1 !== consentCookie.indexOf(delegatedStorage.name))) ? 'granted' : 'denied';
 
   }
 
   defaultConsents[storage.name] = defaultStorageConsent;
-  
+
   if ('granted' === defaultStorageConsent) {
     acceptedStorageNames.push(storage.name);
   }
@@ -1878,7 +2240,7 @@ for (let eventTriggerKey in eventTriggers) {
   if (invoke) {
     gtag('event', eventTrigger.name, {});
     Object.delete(eventTriggers, eventTriggerKey);
-    
+
     log('EventTrigger "' + eventTrigger.name + '" invoked with the default consent.');
   }
 }
@@ -1891,11 +2253,11 @@ let translation;
 
 for (translationKey in translationsData) {
   translation = translationsData[translationKey];
-  
+
   if (!translations.hasOwnProperty(translation.locale)) {
     translations[translation.locale] = {};
   }
-  
+
   translations[translation.locale][translation.key] = translation.value;
 }
 
@@ -1932,7 +2294,7 @@ if (data.hasOwnProperty('script_selector')) {
 }
 
 if (data.hasOwnProperty('cookie_domain') && '' !== data.cookie_domain) {
-    pluginOptions.cookie_domain = data.cookie_domain;
+  pluginOptions.cookie_domain = data.cookie_domain;
 }
 
 // create auto-clear options
@@ -1949,7 +2311,7 @@ const cookieTableHeaders = [];
 
 if (data.cmp_api_enabled && data.cmp_api_cookies_api_enabled) {
   cookieTableHeaders.push('name');
-  
+
   for (let i in data.cmp_api_cookie_table_headers) {
     cookieTableHeaders.push(data.cmp_api_cookie_table_headers[i].name);
   }
@@ -1959,7 +2321,7 @@ if (data.cmp_api_enabled && data.cmp_api_cookies_api_enabled) {
 setInWindow('cc_wrapper_config', {
   plugin_options: pluginOptions,
   auto_clear_options: autoClearOptions,
-  
+
   consent_modal_options: {
     layout: data.consent_modal_layout,
     position: data.consent_modal_position,
@@ -1969,34 +2331,35 @@ setInWindow('cc_wrapper_config', {
     swap_buttons: 'secondary_primary' === data.consent_modal_buttons_order,
     show_third_button: data.consent_modal_show_third_button
   },
-  
+
   settings_modal_options: {
     layout: data.settings_modal_layout,
     position: data.settings_modal_position,
     transition: data.settings_modal_transition,
     modal_trigger_selector: data.modal_trigger_selector || undefined
   },
-  
+
   ui_options: {
     include_default_stylesheets: data.include_default_stylesheets,
     external_stylesheets: data.external_stylesheets || [],
     internal_stylesheets: data.hasOwnProperty('internal_stylesheets') ? [data.internal_stylesheets] : []
   },
-  
+
   user_options: {
     identity: 'default' !== data.user_identity ? data.user_identity : null,
     attributes: userAttributes
   },
-  
+
   cmp_api_options: {
     url: data.cmp_api_enabled ? data.cmp_api_host : null,
     project: data.cmp_api_enabled && data.cmp_api_project ? data.cmp_api_project : null,
     version: data.cmp_api_enabled ? data.cmp_api_version : 1,
+    environment: data.cmp_api_enabled ? (data.cmp_api_default_environment ? 'default' : data.cmp_api_environment_code) : null,
     consent_api_enabled: data.cmp_api_enabled ? data.cmp_api_consent_api_enabled : false,
     cookies_api_enabled: data.cmp_api_enabled ? data.cmp_api_cookies_api_enabled : false,
     cookie_table_headers: cookieTableHeaders
   },
-  
+
   storage_pool: Object.values(storagePool),
   event_triggers: Object.values(eventTriggers),
   locales: data.locales,
@@ -2009,18 +2372,18 @@ const cookieConsentWrapperScript = data.cc_script_url ? data.cc_script_url : 'ht
 
 
 if (queryPermission('inject_script', cookieConsentWrapperScript)) {
-    injectScript(cookieConsentWrapperScript, function () {      
-      const events = temporaryWrapper.getEvents();
-      let event;
-      let eventKey;
-      
-      for (eventKey in events) {
-        event = events[eventKey];
-        callInWindow('CookieConsentWrapper.on', event[0], event[1], event[2]);
-      }
-      
-      data.gtmOnSuccess();
-    }, data.gtmOnFailure);
+  injectScript(cookieConsentWrapperScript, function () {
+    const events = temporaryWrapper.getEvents();
+    let event;
+    let eventKey;
+
+    for (eventKey in events) {
+      event = events[eventKey];
+      callInWindow('CookieConsentWrapper.on', event[0], event[1], event[2]);
+    }
+
+    data.gtmOnSuccess();
+  }, data.gtmOnFailure);
 } else {
   data.gtmOnFailure();
 }
@@ -2239,6 +2602,68 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "wait_for_update"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_user_data"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_personalization"
                   },
                   {
                     "type": 8,
