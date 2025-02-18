@@ -55,6 +55,7 @@ The plugin is configurable using fields inside the tag definition.
 | Package version                     | Version of the package `68publishers/cookie-consent`. Valid inputs are the `latest` or a version in formats `x.x.x`, `x.x.x-beta.x` and `x.x.x-alpha-x`. For available versions see the [releases](https://github.com/68publishers/cookie-consent/releases). |
 | Make consent required               | The page will be blocked until a user action.                                                                                                                                                                                                                |
 | Show the widget as soon as possible | The widget will be displayed automatically on the page load. You must trigger the widget manually by calling `CookieConsentWrapper.unwrap().show()` if the option is disabled.                                                                               |
+| Init widget after DOMContentLoaded  | The widget is initialized as soon as possible by default. If the option is enabled, initialization will wait until the `DOMContentLoaded` event.                                                                                                             |
 | Hide from bots                      | Enable if you don't want the plugin to run when a bot/crawler/webdriver is detected.                                                                                                                                                                         |
 | Revision                            | Revision number of your terms of use of cookies. For more information [see below](#how-to-manage-revisions).                                                                                                                                                 |
 | Delay                               | Number of milliseconds before showing the consent modal.                                                                                                                                                                                                     |
@@ -145,9 +146,17 @@ The package comes with the default translations for the following languages:
 - [Norwegian - no](src/resources/translations/no.json)
 - [Swedish - sv](src/resources/translations/se.json)
 - [Ukrainian - uk](src/resources/translations/ua.json)
+- [Portuguese - pt](src/resources/translations/pt.json)
 
 Translations that will be loaded and accessible for the widget are taken from the field `Locales`. Each locale must be defined on a new line.
-If you want to rewrite default translations or you want to add translations for a new locale then you can define them in a table `Translations`.
+Alternatively, from version `1.0.0`, the URL from which the translations are to be downloaded can also be entered.
+
+<img src="docs/images/locale-options.png" alt="Locale options" width="600">
+
+In the example above, the default translations for the English language are downloaded and the translations for the German language are downloaded from the URL `https://www.example.com/public/cc-translations/de.json`.
+A translation file must always be in JSON format and its name must match a locale.
+
+If you want to rewrite default translations, or you want to add translations for a new locale then you can define them in a table `Translations`.
 
 ### Locale detection
 
@@ -268,7 +277,9 @@ And a tag that is fired with the trigger:
 ## Accessing the wrapper in the JavaScript
 
 The wrapper is accessible in the `window` under the name `CookieConsentWrapper`. The recommended way how to manipulate with it is through event callbacks because the wrapper may not be fully initialized at the time your script is executed.
-Callbacks are attached with calling of the method `CookieConsentWrapper.on()`.
+Callbacks are attached with calling of the method `CookieConsentWrapper.on()`, however since the version `1.0.0` the preferred method is to use the `window.cookieConsentWrapperEvents` variable.
+
+The use of the variable avoids the situation when the wrapper does not exist in the window yet.
 
 ### Init event
 
@@ -276,13 +287,15 @@ A callback is invoked when the wrapper is fully initialized or directly if every
 
 ```html
 <script>
-    CookieConsentWrapper.on('init', function () {
+    window.cookieConsentWrapperEvents = window.cookieConsentWrapperEvents || [];
+
+    window.cookieConsentWrapperEvents.push(['init', function () {
         if (CookieConsentWrapper.allowedCategory('analytics_storage')) {
             // check if the analytics_storage is granted
         }
 
         CookieConsentWrapper.unwrap(); // get the original cookie consent plugin
-    });
+    }]);
 </script>
 ```
 
@@ -290,15 +303,19 @@ A callback is invoked when the wrapper is fully initialized or directly if every
 
 ```html
 <script>
-    CookieConsentWrapper.on('consent:first-action', function (consent) {
+    window.cookieConsentWrapperEvents = window.cookieConsentWrapperEvents || [];
+
+    window.cookieConsentWrapperEvents.push(['consent:first-action', function (consent) {
         // called on the first user's action
-    });
-    CookieConsentWrapper.on('consent:accepted', function (consent) {
-      // called on every page load after the first user's action
-    });
-    CookieConsentWrapper.on('consent:changed', function (consent, changedCategories) {
-      // called when preferences changed
-    });
+    }]);
+
+    window.cookieConsentWrapperEvents.push(['consent:accepted', function (consent) {
+        // called on every page load after the first user's action
+    }]);
+
+    window.cookieConsentWrapperEvents.push(['consent:changed', function (consent, changedCategories) {
+        // called when preferences changed
+    }]);
 </script>
 ```
 
@@ -306,10 +323,12 @@ A callback is invoked when the wrapper is fully initialized or directly if every
 
 ```html
 <script>
-    CookieConsentWrapper.on('locale:change', function (locale) {
+    window.cookieConsentWrapperEvents = window.cookieConsentWrapperEvents || [];
+
+    window.cookieConsentWrapperEvents.push(['locale:change', function (locale) {
         // called when the plugin locale is changed through method `CookieConsentWrapper.changeLocale()`
         console.log(locale + '!');
-    });
+    }]);
 
     // ...
 
@@ -408,10 +427,10 @@ $ npm run build:dev # or prod
 ```
 
 Paths of output files are:
- - `~/build/cookie-consent.js` (dev mode)
+ - `~/demo/cookie-consent.js` (dev mode)
  - `~/dist/cookie-consent.min.js` (production mode)
 
-A simple demo page without real GTM is located in `~/build/index.html`. To show the demo in your browser run:
+A simple demo page without real GTM is located in `~/demo/index.html`. To show the demo in your browser run:
 
 ```sh
 $ npm run start:dev

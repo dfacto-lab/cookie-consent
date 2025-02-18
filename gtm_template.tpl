@@ -1,4 +1,12 @@
-﻿___INFO___
+﻿___TERMS_OF_SERVICE___
+
+By creating or modifying this file you agree to Google Tag Manager's Community
+Template Gallery Developer Terms of Service available at
+https://developers.google.com/tag-manager/gallery-tos (or such other URL as
+Google may provide), as modified from time to time.
+
+
+___INFO___
 
 {
   "type": "TAG",
@@ -68,6 +76,14 @@ ___TEMPLATE_PARAMETERS___
     "simpleValueType": true,
     "defaultValue": true,
     "help": "You need to manually call the CookieConsentWrapper.unwrap().show() method if you disable the option."
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "init_after_dom_content_loaded",
+    "checkboxText": "Init widget after DOMContentLoaded",
+    "simpleValueType": true,
+    "help": "The widget is initialized as soon as possible by default. If the option is enabled, initialization will wait until the DOMContentLoaded event.",
+    "defaultValue": false
   },
   {
     "type": "CHECKBOX",
@@ -475,6 +491,14 @@ ___TEMPLATE_PARAMETERS___
         ],
         "help": "One name per line.",
         "lineCount": 3
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "use_rfc_cookie",
+        "checkboxText": "Use RFC cookie",
+        "simpleValueType": true,
+        "defaultValue": false,
+        "help": "The cookie value will be encoded using the \u003ccode\u003eencodeURIComponent\u003c/code\u003e function (so the cookie value will be RFC compliant) if the option is enabled. Otherwise, the cookie will contain plain JSON."
       }
     ]
   },
@@ -1433,7 +1457,7 @@ ___TEMPLATE_PARAMETERS___
             "type": "NON_EMPTY"
           }
         ],
-        "help": "One per line."
+        "help": "One locale per line. Alternatively, the URL from which the translations are to be downloaded can also be entered.\nFor example, \u003cstrong\u003ehttps://www.example.com/cc-translations/en.json\u003c/strong\u003e will download the file as an \u003cstrong\u003een\u003c/strong\u003e dictionary."
       },
       {
         "type": "SELECT",
@@ -2081,12 +2105,12 @@ const temporaryWrapper = (function () {
 
 setInWindow('CookieConsentWrapper', temporaryWrapper, false);
 
-// parse consents from cookies
-let consentCookie = getCookieValues(data.cookie_name)[0] || null;
+// parse consents from cookies, values are automatically decoded using decodeURIComponent function if the second argument is true
+let consentCookie = getCookieValues(data.cookie_name, true)[0] || null;
 
 if (null !== consentCookie) {
   consentCookie = JSON.parse(consentCookie);
-  consentCookie = consentCookie.hasOwnProperty('level') && consentCookie.level.length ? consentCookie.level : [];
+  consentCookie = consentCookie && consentCookie.hasOwnProperty('categories') && consentCookie.categories.length ? consentCookie.categories : [];
 }
 
 // build storage pool & event triggers
@@ -2276,13 +2300,15 @@ for (userAttributeKey in userAttributesData) {
 const pluginOptions = {
   force_consent: data.force_consent,
   autorun: data.autorun,
+  init_after_dom_content_loaded: data.init_after_dom_content_loaded,
   hide_from_bots: data.hide_from_bots,
   cookie_name: data.cookie_name,
   cookie_expiration: makeInteger(data.cookie_expiration),
   revision: makeInteger(data.revision),
   delay: makeInteger(data.delay),
   auto_language: 'disabled' !== data.locale_detection_strategy ? data.locale_detection_strategy : null,
-  page_scripts: data.page_scripts
+  page_scripts: data.page_scripts,
+  use_rfc_cookie: data.use_rfc_cookie
 };
 
 if (data.hasOwnProperty('current_locale')) {
@@ -2316,6 +2342,8 @@ if (data.cmp_api_enabled && data.cmp_api_cookies_api_enabled) {
     cookieTableHeaders.push(data.cmp_api_cookie_table_headers[i].name);
   }
 }
+
+const locales = data.locales;
 
 // setup wrapper config
 setInWindow('cc_wrapper_config', {
@@ -2370,6 +2398,30 @@ setInWindow('cc_wrapper_config', {
 const packageVersion = 'latest' === data.package_version ? '' : '@' + data.package_version;
 const cookieConsentWrapperScript = data.cc_script_url ? data.cc_script_url : 'https://unpkg.com/68publishers-cookie-consent' + packageVersion + '/dist/cookie-consent.min.js';
 
+const scriptBaseUrl = 'https://unpkg.com/@68publishers/cookie-consent' + packageVersion + '/dist/';
+const cookieConsentWrapperScript = scriptBaseUrl + 'cookie-consent.min.js';
+
+for (let localeKey in locales) {
+  let locale = locales[localeKey];
+  let localeScript;
+
+  if (0 === locale.lastIndexOf('https://', 0) || 0 === locale.lastIndexOf('http://', 0)) {
+    if (-1 === locale.indexOf('.js', locale.length - 3)) {
+      continue;
+    }
+
+    localeScript = locale;
+  } else {
+    locale = 2 < locale.length ? locale[0] + locale[1] : locale;
+    localeScript = scriptBaseUrl + 'translations/' + locale + '.json.js';
+  }
+
+  if (queryPermission('inject_script', localeScript)) {
+    injectScript(localeScript, data.gtmOnSuccess, data.gtmOnFailure);
+  } else {
+    data.gtmOnFailure();
+  }
+}
 
 if (queryPermission('inject_script', cookieConsentWrapperScript)) {
   injectScript(cookieConsentWrapperScript, function () {

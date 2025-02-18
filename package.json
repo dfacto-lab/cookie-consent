@@ -1,18 +1,19 @@
 {
-  "name": "68publishers-cookie-consent",
-  "version": "0.5.1",
+  "name": "@68publishers/cookie-consent",
+  "version": "1.2.0",
   "description": "Cookie consent wrapper based on orestbida/cookieconsent with GTM integration.",
   "homepage": "http://www.68publishers.io/",
-  "main": "index.js",
+  "main": "index.mjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/68publishers/cookie-consent"
   },
   "scripts": {
-    "build:dev": "webpack --config webpack.config.dev.js --progress --profile",
-    "build:prod": "webpack --config webpack.config.prod.js --progress --profile",
-    "start:dev": "webpack --config webpack.config.dev.js --progress --profile && webpack-dev-server --config webpack.config.dev.js",
-    "prepublish": "npm run build:prod"
+    "build:dev": "webpack --config webpack.config.dev.mjs --progress --profile",
+    "build:prod": "webpack --config webpack.config.prod.mjs --progress --profile",
+    "start:dev": "webpack --config webpack.config.dev.mjs --progress --profile && webpack-dev-server --config webpack.config.dev.mjs",
+    "eslint:fix": "eslint ./index.mjs ./src --fix",
+    "eslint": "eslint ./index.mjs ./src"
   },
   "keywords": [
     "68publishers",
@@ -26,8 +27,20 @@
     "@babel/core": "^7.16.0",
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.16.4",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.5.0",
     "babel-loader": "^8.2.3",
-    "path": "^0.12.7",
+    "copy-webpack-plugin": "^12.0.2",
+    "core-js": "^3.39.0",
+    "css-loader": "^7.1.2",
+    "cssnano": "^7.0.6",
+    "eslint": "^9.5.0",
+    "globals": "^15.6.0",
+    "json-minimizer-webpack-plugin": "^5.0.0",
+    "mini-css-extract-plugin": "^2.9.2",
+    "postcss": "^8.4.49",
+    "postcss-custom-properties": "^14.0.4",
+    "postcss-loader": "^8.1.1",
     "terser-webpack-plugin": "^5.2.5",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
@@ -36,12 +49,13 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "uuid": "^8.3.2",
-    "vanilla-cookieconsent": "^2.8.6",
-    "whatwg-fetch": "^3.6.2"
+    "vanilla-cookieconsent": "^2.8.6"
   },
   "files": [
     "src",
-    "index.js",
-    "dist/cookie-consent.min.js"
+    "index.mjs",
+    "dist/cookie-consent.min.js",
+    "dist/cookie-consent.css",
+    "dist/translations/*"
   ]
 }
