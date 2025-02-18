@@ -2396,10 +2396,8 @@ setInWindow('cc_wrapper_config', {
 
 // inject cookie consent wrapper
 const packageVersion = 'latest' === data.package_version ? '' : '@' + data.package_version;
-const cookieConsentWrapperScript = data.cc_script_url ? data.cc_script_url : 'https://unpkg.com/68publishers-cookie-consent' + packageVersion + '/dist/cookie-consent.min.js';
-
 const scriptBaseUrl = 'https://unpkg.com/@68publishers/cookie-consent' + packageVersion + '/dist/';
-const cookieConsentWrapperScript = scriptBaseUrl + 'cookie-consent.min.js';
+const cookieConsentWrapperScript = data.cc_script_url ? data.cc_script_url : scriptBaseUrl + 'cookie-consent.min.js';
 
 for (let localeKey in locales) {
   let locale = locales[localeKey];
